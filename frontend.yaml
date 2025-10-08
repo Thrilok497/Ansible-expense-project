@@ -1,34 +1,34 @@
 ---
-- name: "frontend server"
+- name: frontend server
   hosts: frontend
   become: yes
   tasks:
-    - name: "Installing nginx"
+    - name: Installing nginx
       ansible.builtin.package:
         name: nginx
         state: present
-    - name: "Start and enable nginx"
+    - name: Start and enable nginx
       ansible.builtin.service:
         name: nginx
         state: started
         enabled: yes
-    - name: "removing default content"
+    - name: removing default content
       ansible.builtin.command: rm -rf /usr/share/nginx/html/*
-    - name: "downloading the content"
+    - name: downloading the content
       ansible.builtin.get_url:
         url: curl -o /tmp/frontend.zip https://expense-joindevops.s3.us-east-1.amazonaws.com/expense-frontend-v2.zip
         dest: /tmp/frontend.zip
-    - name: "Unzipping code"
+    - name: Unzipping code
       ansible.builtin.unarchive:
         src: /tmp/frontend.zip
         dest: /usr/share/nginx/html
         remote_src: yes
-    - name: "nginx Reverse proxy configuration"
+    - name: nginx Reverse proxy configuration
       ansible.builtin.copy:
         src: expense.conf
         dest: /etc/nginx/default.d/expense.conf
-    - name: "restarting nginx"
-        ansible.builtin.service:
+    - name: restarting nginx
+      ansible.builtin.service:
         name: nginx
         state: started
         enabled: true
