@@ -16,7 +16,7 @@
       ansible.builtin.command: rm -rf /usr/share/nginx/html/*
     - name: downloading the content
       ansible.builtin.get_url:
-        url: curl -o /tmp/frontend.zip https://expense-joindevops.s3.us-east-1.amazonaws.com/expense-frontend-v2.zip
+        url: https://expense-joindevops.s3.us-east-1.amazonaws.com/expense-frontend-v2.zip
         dest: /tmp/frontend.zip
     - name: Unzipping code
       ansible.builtin.unarchive:
