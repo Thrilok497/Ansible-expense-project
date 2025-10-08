@@ -1,7 +1,7 @@
 ---
 - name: "database server"
   hosts: mysql
-  becomes: yes
+  become: yes
   tasks:
     - name: "Installing mysql server"
       ansible.builtin.package:
