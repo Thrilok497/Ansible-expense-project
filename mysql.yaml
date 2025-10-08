@@ -5,11 +5,11 @@
   tasks:
     - name: "Installing mysql server"
       ansible.builtin.package:
-        name: "Mysql"
+        name: mysql-server
         state: present
     - name: "Start and enable mysql server"
       ansible.builtin.service:
-        name: "Mysql"
+        name: mysqld
         state: started
         enabled: yes
     - name: "Setting root password"
