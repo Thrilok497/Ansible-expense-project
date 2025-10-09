@@ -40,7 +40,7 @@
         name: mysql-server
         state: present
     - name: check if schema already loaded
-      ansible.builtin.shell: mysql -h 54.82.90.106 -uroot -pExpenseApp@1 -e "show databases like 'expenses';" | wc -
+      ansible.builtin.shell: mysql -h mysql.thrilok.shop -uroot -pExpenseApp@1 -e "show databases like 'expenses';" | wc -
       register: backend_output
    
     
