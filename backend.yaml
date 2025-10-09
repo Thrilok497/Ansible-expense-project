@@ -42,9 +42,5 @@
     - name: check if schema is loaded or not
       ansible.builtin.shell: mysql -h 54.82.90.106 -uroot -pExpenseApp@1 < /app/schema/backend.sql
       register: backend_output
-    - name: restarting the server
-      ansible.builtin.service:
-        name: nodejs
-        state: started
-        enabled: true
+   
     
