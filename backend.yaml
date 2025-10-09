@@ -40,7 +40,7 @@
         name: mysql-server
         state: present
     - name: check if schema is loaded or not
-      ansible.builtin.shell: mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pExpenseApp@1 < /app/schema/backend.sql
+      ansible.builtin.shell: mysql -h 54.82.90.106 -uroot -pExpenseApp@1 < /app/schema/backend.sql
       register: backend_output
     - name: restarting the server
       ansible.builtin.service:
