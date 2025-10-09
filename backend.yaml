@@ -29,4 +29,22 @@
         dest: /app
         remote_src: yes
     - name: install dependencies
+      community.general.npm:
+        path: /app
+    - name: copy backend service content
+      ansible.builtin.copy:
+        src: backend.service
+        dest: /etc/systemd/system/backend.service
+    - name: install mysql server
+      ansible.builtin.package:
+        name: mysql-server
+        state: present
+    - name: check if schema is loaded or not
+      ansible.builtin.shell: mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pExpenseApp@1 < /app/schema/backend.sql
+      register: backend_output
+    - name: restarting the server
+      ansible.builtin.service:
+        name: nodejs
+        state: started
+        enabled: true
     
