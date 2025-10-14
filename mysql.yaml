@@ -39,6 +39,35 @@
         login_password: "{{ mysql_root_password }}"
         login_host: localhost
 
+    - name: Create expenses table
+      community.mysql.mysql_query:
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        login_host: localhost
+        db: transactions
+        sql: |
+          CREATE TABLE IF NOT EXISTS expenses (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            amount DECIMAL(10,2) NOT NULL,
+            category VARCHAR(100),
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          );
+
+    - name: Insert sample expenses
+      community.mysql.mysql_query:
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        login_host: localhost
+        db: transactions
+        sql: |
+          INSERT INTO expenses (title, amount, category) VALUES
+          ('Lunch', 150.00, 'Food'),
+          ('Taxi', 300.00, 'Transport'),
+          ('Office Supplies', 500.00, 'Work')
+          ON DUPLICATE KEY UPDATE title=VALUES(title);
+
+
 
 
 
