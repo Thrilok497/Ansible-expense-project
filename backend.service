@@ -1,10 +1,15 @@
 [Unit]
-Description = Backend Service
+Description=Backend Service
 
 [Service]
 User=expense
-Environment=DB_HOST="database.thrilok.shop"
+Environment=DB_HOST=database.thrilok.shop
+Environment=DB_USER=root
+Environment=DB_PASS=ExpenseApp@1
+Environment=DB_NAME=transactions
+Environment=PORT=8080
 ExecStart=/bin/node /app/index.js
+Restart=always
 SyslogIdentifier=backend
 
 [Install]
