@@ -1,9 +1,7 @@
 ---
-- name: "database server"
+- name: database server
   hosts: mysql
   become: true
-  vars:
-    mysql_root_password: "ExpenseApp@1"
   tasks:
     - name: Install MySQL server
       ansible.builtin.package:
@@ -16,59 +14,6 @@
         state: started
         enabled: true
 
-    - name: Install Python MySQL dependencies
-      ansible.builtin.package:
-        name: python3-PyMySQL
-        state: present
-
-    - name: Ensure root user uses password authentication
-      community.mysql.mysql_user:
-        name: root
-        host: localhost
-        password: "{{ mysql_root_password }}"
-        login_user: root
-        login_password: ""
-        priv: '*.*:ALL,GRANT'
-        state: present
-
-    - name: Create application database
-      community.mysql.mysql_db:
-        name: transactions
-        state: present
-        login_user: root
-        login_password: "{{ mysql_root_password }}"
-        login_host: localhost
-
-    - name: Create expenses table
-      community.mysql.mysql_query:
-        login_user: root
-        login_password: "{{ mysql_root_password }}"
-        login_host: localhost
-        db: transactions
-        sql: |
-          CREATE TABLE IF NOT EXISTS expenses (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            title VARCHAR(255) NOT NULL,
-            amount DECIMAL(10,2) NOT NULL,
-            category VARCHAR(100),
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-          );
-
-    - name: Insert sample expenses
-      community.mysql.mysql_query:
-        login_user: root
-        login_password: "{{ mysql_root_password }}"
-        login_host: localhost
-        db: transactions
-        sql: |
-          INSERT INTO expenses (title, amount, category) VALUES
-          ('Lunch', 150.00, 'Food'),
-          ('Taxi', 300.00, 'Transport'),
-          ('Office Supplies', 500.00, 'Work')
-          ON DUPLICATE KEY UPDATE title=VALUES(title);
-
-
-
-
-
-      
+    - name: default root password in order to start using the database service
+      ansible.builtin.command: mysql_secure_installation --set-root-pass ExpenseApp@1
+       
