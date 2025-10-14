@@ -2,6 +2,8 @@
 - name: "database server"
   hosts: mysql
   become: true
+  vars:
+    mysql_root_password: "ExpenseApp@1"
   tasks:
     - name: Install MySQL server
       ansible.builtin.package:
@@ -14,25 +16,29 @@
         state: started
         enabled: true
 
-    - name: Set MySQL root password
-      ansible.builtin.command: mysql_secure_installation --set-root-pass ExpenseApp@1
-
     - name: Install Python MySQL dependencies
       ansible.builtin.package:
         name: python3-PyMySQL
         state: present
 
-    - name: Configure MySQL root user to use password authentication
-      ansible.builtin.shell: |
-        mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'ExpenseApp@1'; FLUSH PRIVILEGES;"
+    - name: Ensure root user uses password authentication
+      community.mysql.mysql_user:
+        name: root
+        host: localhost
+        password: "{{ mysql_root_password }}"
+        login_user: root
+        login_password: ""
+        priv: '*.*:ALL,GRANT'
+        state: present
 
     - name: Create application database
       community.mysql.mysql_db:
         name: transactions
         state: present
         login_user: root
-        login_password: ExpenseApp@1
+        login_password: "{{ mysql_root_password }}"
         login_host: localhost
+
 
 
 
