@@ -1,0 +1,25 @@
+- name: create ec2 and r53
+  hosts: local
+  connection: local
+  vars:
+    ami_id: ami-09c813fb71547fc4f
+    sg_id: sg-0f5c53cd3d6a83a4d # replace with your SG ID
+    zone_id: "Z03287253P3II3OHBR9SH" # replace with your ID
+    domain_name: "thrilok.shop"
+    # we can pass instances through command line using -e
+    instances: 
+    - database
+    - backend
+    - frontend
+  tasks:
+  - name: create ec2 instance
+    amazon.aws.ec2_instance:
+      name: "{{ item }}"
+      instance_type: t3.micro
+      security_group: "{{ sg_id }}"
+      image_id: "{{ ami_id }}"
+      tags:
+        Name: "{{ item }}"
+    loop: "{{ instances }}"
+    register: ec2_output
+
